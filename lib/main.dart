@@ -27,16 +27,6 @@ final _router = GoRouter(
             GoRoute(
               path: Routes.beranda,
               builder: (context, state) => Beranda(),
-              // routes: [
-              //   GoRoute(
-              //     path: '/detail/:id',
-              //     parentNavigatorKey: _routerKey,
-              //     builder: (context, state) {
-              //       final String id = state.pathParameters['id']!;
-              //       return Detail(id: id);
-              //     }, 
-              //   )
-              // ]
             ),
           ],
         ),
