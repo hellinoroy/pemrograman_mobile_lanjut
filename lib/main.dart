@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:uts/pages/beranda.dart';
-import 'package:uts/pages/cari.dart';
-import 'package:uts/pages/saya.dart';
-import 'package:uts/routes.dart';
-import 'package:uts/widgets/navbar.dart';
+import 'package:tb/pages/beranda.dart';
+import 'package:tb/pages/cari.dart';
+import 'package:tb/pages/detail.dart';
+import 'package:tb/pages/saya.dart';
+import 'package:tb/routes.dart';
+import 'package:tb/widgets/navbar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +26,17 @@ final _router = GoRouter(
           routes: [
             GoRoute(
               path: Routes.beranda,
-              builder: (context, state) => const Beranda(),
+              builder: (context, state) => Beranda(),
+              // routes: [
+              //   GoRoute(
+              //     path: '/detail/:id',
+              //     parentNavigatorKey: _routerKey,
+              //     builder: (context, state) {
+              //       final String id = state.pathParameters['id']!;
+              //       return Detail(id: id);
+              //     }, 
+              //   )
+              // ]
             ),
           ],
         ),
@@ -47,22 +58,17 @@ final _router = GoRouter(
         ),
       ],
     ),
+    GoRoute(
+      path: '/detail/:id',
+      parentNavigatorKey: _routerKey,
+      builder: (context, state) {
+        final String id = state.pathParameters['id']!;
+        return Detail(id: id);
+      }, 
+    ),
 
-
-
-    // GoRoute(
-    //   path: '/project/:name',
-    //   builder: (context, state) {
-    //     final name = state.pathParameters['name']!;
-    //     return Project(name: name);
-    //   },
-    // ),
   ],
 );
-
-
-
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override

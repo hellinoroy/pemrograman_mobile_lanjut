@@ -1,0 +1,93 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+class ItemCard extends StatelessWidget {
+  final Widget cardImage;
+  final String cardText;
+  final String cardPrice;
+  final String targetLocation;
+
+  const ItemCard({
+    super.key, 
+    required this.cardImage, 
+    required this.cardText, 
+    required this.cardPrice, 
+    required this.targetLocation
+  });
+
+  @override
+  Widget build(BuildContext context) {
+
+    SizedBox cardImageWidget() {
+      return SizedBox(
+        height: 200,
+        width: double.infinity,
+        child: cardImage,
+      );
+    }
+
+    Row cardHeader() {
+      return Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(cardText),
+                Text(cardPrice),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
+    Expanded cardBody() {
+    final colors = Theme.of(context).colorScheme;
+    final backgroundColor = WidgetStateProperty.resolveWith<Color?>((states) {
+      if (states.contains(WidgetState.pressed)) {
+        return colors.secondary; // Color when pressed
+      }
+      if (states.contains(WidgetState.disabled)) {
+        return colors.tertiary; // Color when disabled
+      }
+      return colors.primary; // Default color
+    });
+
+    return  Expanded(
+        child: Padding(
+        padding: const EdgeInsetsGeometry.all(8.0),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+            cardHeader(),
+            SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: () => context.push('/detail/$targetLocation'), 
+                  style: ButtonStyle(
+                    backgroundColor: backgroundColor, 
+                    textStyle: WidgetStateProperty.all(TextStyle(color: Colors.white))), 
+                    child: const Text('Lihat Detail')),
+            )
+            ],
+        ),
+        ),
+    );
+    }
+
+
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      child: Column(
+        children: [
+          cardImageWidget(),
+          cardBody(),
+        ],
+      ),
+    );
+  }
+}
+

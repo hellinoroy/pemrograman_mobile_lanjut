@@ -1,4 +1,4 @@
-name: uts
+name: tb
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -64,16 +64,10 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   assets:
-    - assets/foto.jpg
-    - assets/project/pos1.jpg
-    - assets/project/pos2.jpg
-    - assets/project/pos3.jpg
-    - assets/project/rsi1.jpg
-    - assets/project/rsi2.jpg
-    - assets/project/rsi3.jpg
-    - assets/project/sleepwell1.jpg
-    - assets/project/sleepwell2.jpg
-    - assets/project/sleepwell3.jpg
+    - assets/cloth/RibKnit02.jpeg
+    - assets/cloth/LaneKnit.jpeg
+    - assets/cloth/PrimeScuba.jpeg
+    - assets/cloth/Sakura.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

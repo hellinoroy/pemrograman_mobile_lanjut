@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:uts/widgets/body.dart';
-import 'package:uts/widgets/header.dart';
+import 'package:tb/widgets/body.dart';
+import 'package:tb/widgets/header.dart';
 
 class Homepage extends StatelessWidget{
   const Homepage({super.key});
