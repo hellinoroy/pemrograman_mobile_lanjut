@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:tb/widgets/item_card.dart';
 import 'package:tb/widgets/searchbar.dart';
 
-  class Product {
-    final String id;
-    final String name;
-    final String price;
-    final String imagePath;
+class Product {
+  final String id;
+  final String name;
+  final String price;
+  final String imagePath;
 
-    Product({required this.id, required this.name, required this.price, required this.imagePath});
-  }
+  Product({required this.id, required this.name, required this.price, required this.imagePath});
+}
 
 class Beranda extends StatelessWidget {
   Beranda({super.key});
@@ -40,11 +40,12 @@ class Beranda extends StatelessWidget {
                 itemCount: cards.length,
                 padding: const EdgeInsets.all(16),
               
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.55,   
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 220, 
+                  childAspectRatio: 0.7,  
                   crossAxisSpacing: 10,   
                   mainAxisSpacing: 10,   
+                  mainAxisExtent: 310.0,
                 ),
                 
                 itemBuilder: (context, index) {

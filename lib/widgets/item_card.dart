@@ -33,7 +33,8 @@ class ItemCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(cardText),
+                Text(cardText, style: TextStyle(fontWeight: FontWeight.bold,), textScaler: TextScaler.linear(1.2),),
+                SizedBox(height: 5.0,),
                 Text(cardPrice),
               ],
             ),

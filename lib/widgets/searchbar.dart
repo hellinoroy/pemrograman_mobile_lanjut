@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CustomSearchAnchor extends StatefulWidget {
   const CustomSearchAnchor({super.key});
@@ -7,17 +8,19 @@ class CustomSearchAnchor extends StatefulWidget {
   State<CustomSearchAnchor> createState() => _CustomSearchAnchorState();
 }
 
+class Product {
+  final String id;
+  final String name;
+  final String price;
+  final String imagePath;
+
+  Product({required this.id, required this.name, required this.price, required this.imagePath});
+}
+
 class _CustomSearchAnchorState extends State<CustomSearchAnchor> {
   final SearchController _controller = SearchController();
 
-  final List<String> items = const [
-    'Apple',
-    'Banana',
-    'Cherry',
-    'Date',
-    'Elderberry',
-  ];
-
+ 
   @override
   void initState() {
     super.initState();
@@ -46,29 +49,70 @@ class _CustomSearchAnchorState extends State<CustomSearchAnchor> {
       child: AbsorbPointer(
         child: SearchAnchor.bar(
           searchController: _controller,
-          barHintText: 'Search fruits...',
+          barHintText: 'Search...',
           barLeading: const Icon(Icons.search),
 
-          suggestionsBuilder: (context, controller) {
-            final results = items
-                .where(
-                  (item) => item
-                      .toLowerCase()
-                      .contains(controller.text.toLowerCase()),
+          suggestionsBuilder: (BuildContext context, SearchController controller) {
+            if (controller.text.isEmpty) {
+              return [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Categories',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      const SizedBox(height: 12),
+                      Wrap(
+                        spacing: 8.0,
+                        runSpacing: 8.0,
+                        children: [
+                          _buildCategoryChip('Woven Solid', context, controller),
+                          _buildCategoryChip('Woven Knit', context, controller),
+                          _buildCategoryChip('Knit Solid', context, controller),
+                          _buildCategoryChip('Knit Motif', context, controller),
+                        ],
+                      ),
+                    ],
+                  ),
                 )
-                .toList();
-
-            return results.map(
-              (item) => ListTile(
-                title: Text(item),
-                onTap: () {
-                  controller.closeView(item);
-                },
-              ),
-            );
+              ];
+            } else {
+                final String query = controller.text.toLowerCase();
+                final List<Product> cards = [
+                  Product(id: '1', name: 'Rib Knit Basic',  price: 'Rp 75.000',  imagePath: 'assets/cloth/RibKnit02.jpeg'),
+                  Product(id: '2', name: 'Lane Knit',  price: 'Rp 85.500',  imagePath: 'assets/cloth/LaneKnit.jpeg'),
+                  Product(id: '3', name: 'Prime Scuba',  price: 'Rp 110.000',  imagePath: 'assets/cloth/PrimeScuba.jpeg'),
+                  Product(id: '4', name: 'Sakura',  price: 'Rp 22.000',  imagePath: 'assets/cloth/Sakura.jpeg'),
+                ];
+                
+                return cards
+                    .where((item) => item.name.toLowerCase().contains(query))
+                    .map((item) => ListTile(
+                        title: Text(item.name),
+                        onTap: () {
+                          context.push('detail/${item.id}');
+                        },
+                        ))
+                    .toList();
+            }
           },
         ),
       ),
     );
   }
+}
+
+
+// Helper helper widget for the category buttons
+Widget _buildCategoryChip(String label, BuildContext context, SearchController controller) {
+  return ActionChip(
+    label: Text(label),
+    onPressed: () {
+      // controller.text = label;
+      context.push('categories/$label');
+    },
+  );
 }

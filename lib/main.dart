@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tb/pages/beranda.dart';
-import 'package:tb/pages/cari.dart';
+import 'package:tb/pages/catagories.dart';
 import 'package:tb/pages/detail.dart';
 import 'package:tb/pages/saya.dart';
 import 'package:tb/routes.dart';
@@ -33,14 +33,6 @@ final _router = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: Routes.cari,
-              builder: (context, state) => const Cari(),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
               path: Routes.saya,
               builder: (context, state) => const Saya(),
             ),
@@ -48,12 +40,22 @@ final _router = GoRouter(
         ),
       ],
     ),
+
     GoRoute(
-      path: '/detail/:id',
+      path: Routes.detail,
       parentNavigatorKey: _routerKey,
       builder: (context, state) {
         final String id = state.pathParameters['id']!;
         return Detail(id: id);
+      }, 
+    ),
+
+    GoRoute(
+      path: Routes.categories,
+      parentNavigatorKey: _routerKey,
+      builder: (context, state) {
+        final String name = state.pathParameters['name']!;
+        return Categories(categoriesName : name);
       }, 
     ),
 

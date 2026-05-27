@@ -123,7 +123,7 @@ class _DetailState extends State<Detail> {
           Expanded(
             child: ListView(
               children: [
-                Image.asset(foundProduct.imagePath),
+                Image.asset(foundProduct.imagePath, height: 300.0, width: 300.0,),
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: Text('Harga: ${foundProduct.price} / Kilogram', style: TextStyle(color: colors.primary, fontSize: 22, fontWeight: FontWeight.bold  ),),
