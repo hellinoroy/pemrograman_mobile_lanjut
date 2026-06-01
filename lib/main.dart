@@ -1,38 +1,31 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+// import 'package:uts/widgets/filter_carousel.dart';
+import 'package:uts/widgets/takepicture_screen.dart';
 
-import 'package:go_router/go_router.dart';
-import 'package:uts/pages/homepage.dart';
-import 'package:uts/pages/project.dart';
-
-void main() {
-  runApp(const MyApp());
+// PRAKTIKUM 1
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final cameras = await availableCameras();
+  final firstCamera = cameras.first;
+  runApp(
+    MaterialApp(
+      theme: ThemeData.dark(),
+      home: TakePictureScreen(
+        // Pass the appropriate camera to the TakePictureScreen widget.
+        camera: firstCamera,
+      ),
+      debugShowCheckedModeBanner: false,
+    ),
+  );
 }
 
-final _router = GoRouter(
-  initialLocation: '/',
-  routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const Homepage(),
-    ),
-    GoRoute(
-      path: '/project/:name',
-      builder: (context, state) {
-        final name = state.pathParameters['name']!;
-        return Project(name: name);
-      },
-    ),
-  ],
-);
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: _router,
-    );
-  }
-}
+// PRAKTIKUM 2
+// void main() {
+//   runApp(
+//     const MaterialApp(
+//       home: PhotoFilterCarousel(),
+//       debugShowCheckedModeBanner: false,
+//     ),
+//   );
+// }
