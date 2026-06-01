@@ -47,12 +47,12 @@ class ItemCard extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     final backgroundColor = WidgetStateProperty.resolveWith<Color?>((states) {
       if (states.contains(WidgetState.pressed)) {
-        return colors.secondary; // Color when pressed
+        return colors.secondary; 
       }
       if (states.contains(WidgetState.disabled)) {
-        return colors.tertiary; // Color when disabled
+        return colors.tertiary; 
       }
-      return colors.primary; // Default color
+      return colors.primary;
     });
 
     return  Expanded(
