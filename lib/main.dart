@@ -1,31 +1,25 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-// import 'package:uts/widgets/filter_carousel.dart';
-import 'package:uts/widgets/takepicture_screen.dart';
+import 'package:uts/models/plan.dart';
+import 'package:uts/provider/plan_provider.dart';
+import 'package:uts/views/plan_creator_screen.dart';
 
-// PRAKTIKUM 1
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final cameras = await availableCameras();
-  final firstCamera = cameras.first;
-  runApp(
-    MaterialApp(
-      theme: ThemeData.dark(),
-      home: TakePictureScreen(
-        // Pass the appropriate camera to the TakePictureScreen widget.
-        camera: firstCamera,
+  
+void main() => runApp(MasterPlanApp());
+
+class MasterPlanApp extends StatelessWidget {
+  const MasterPlanApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return PlanProvider(
+      notifier: ValueNotifier<List<Plan>>(const []),
+      child: MaterialApp(
+        title: 'State management app',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const PlanCreatorScreen(),
       ),
-      debugShowCheckedModeBanner: false,
-    ),
-  );
+    );
+  }
 }
-
-// PRAKTIKUM 2
-// void main() {
-//   runApp(
-//     const MaterialApp(
-//       home: PhotoFilterCarousel(),
-//       debugShowCheckedModeBanner: false,
-//     ),
-//   );
-// }
