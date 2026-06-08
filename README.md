@@ -11,3 +11,6 @@ Soal 4
 Langkah 1 membuat method async yang mereturn 1,2, dan 3 setelah 3 detik pada masing-masing method.
 Langkah 2 membuat method async yang menggabungkan semua return method langkah 1 dan menaruhnya di variable result.
 
+Soal 5
+Langkah 2 menggunakan completer sehingga tidak perlu lagi menggunakan then, catchError, async, dan await.
+

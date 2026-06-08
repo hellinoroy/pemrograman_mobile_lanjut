@@ -33,6 +33,7 @@ class FuturePage extends StatefulWidget {
 
 class _FuturePageState extends State<FuturePage> {
   String result = '';
+  late Completer completer;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,11 @@ class _FuturePageState extends State<FuturePage> {
             const Spacer(),
             ElevatedButton(
               onPressed: () {
-                count();
+                getNumber().then((value) {
+                  setState(() {
+                      result = value.toString();
+                  });
+                });
               }, 
               child: const Text('GO!')
             ),
@@ -94,6 +99,16 @@ class _FuturePageState extends State<FuturePage> {
     });
   }
 
+  Future getNumber() {
+    completer = Completer<int>();
+    calculate();
+    return completer.future;
+  }
+
+  Future calculate() async {
+    await Future.delayed(const Duration(seconds : 5));
+    completer.complete(42);
+  }
 
 }
 
