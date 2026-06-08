@@ -17,4 +17,7 @@ Langkah 2 menggunakan completer sehingga tidak perlu lagi menggunakan then, catc
 Soal 6
 Langkah 2 hanya memliki complete. sedangkan langkah 5-6 memiliki catch untuk mencegat error.
 
+Soal 7
+Langkah 1 penambahan method returnFG, dimana future di kelompokan dan di jalankan, setelah ditutup. fungsi yang mengubah result berdasarkan total berjalan.
+Langkah 2 mengubah onPressed sehingga reurnFG berjalan
 
