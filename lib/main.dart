@@ -49,8 +49,10 @@ class _FuturePageState extends State<FuturePage> {
               onPressed: () {
                 getNumber().then((value) {
                   setState(() {
-                      result = value.toString();
+                    result = value.toString();
                   });
+                }).catchError((e) {
+                  result = 'An error occurred';
                 });
               }, 
               child: const Text('GO!')
@@ -108,6 +110,15 @@ class _FuturePageState extends State<FuturePage> {
   Future calculate() async {
     await Future.delayed(const Duration(seconds : 5));
     completer.complete(42);
+  }
+
+  Future calculate2() async {
+    try {
+      await new Future.delayed(const Duration(seconds : 5));
+      completer.complete(42);
+    } catch (_) {
+      completer.completeError({});
+    }
   }
 
 }

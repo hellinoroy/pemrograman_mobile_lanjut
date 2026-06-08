@@ -14,3 +14,7 @@ Langkah 2 membuat method async yang menggabungkan semua return method langkah 1 
 Soal 5
 Langkah 2 menggunakan completer sehingga tidak perlu lagi menggunakan then, catchError, async, dan await.
 
+Soal 6
+Langkah 2 hanya memliki complete. sedangkan langkah 5-6 memiliki catch untuk mencegat error.
+
+
