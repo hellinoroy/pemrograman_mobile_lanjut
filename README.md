@@ -32,3 +32,6 @@ Jalan di browser bisa, hanya perlu memberikan permission.
 
 Soal 13
 Tidak ada perbedaan, karena sama-sama menunggu hasil getPosition() jika belum siap akan ada CircularProgressIndicator()
+
+Soal 14
+Ada perbedaan jika terjadinya error terhadap future.
