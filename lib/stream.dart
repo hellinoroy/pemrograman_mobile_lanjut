@@ -10,7 +10,17 @@ class ColorStream {
   ];
 
 
+// async* menandakan asynchronous generator, sehingga dapat menggunakan yield dan yield*
+// yield* menandakan stream berterus, Stream.periodic membuat stream dalam interval 1 detik
 
+  Stream<Color> getColors() async* {
+    yield* Stream.periodic(
+      const Duration(seconds: 1), (int t) {
+        int index = t % colors.length;
+        return colors[index];
+      }
+    );
+  }
 
 
 }
