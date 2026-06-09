@@ -24,3 +24,8 @@ Langkah 2 mengubah onPressed sehingga reurnFG berjalan
 Soal 8
 Langkah 1 menggunakan FutureGroup sedangkan langkah 4 menggunakan future.wait. Perbedaannya adalah futuregroup lebih flexible dibandingkan future.wait. futuregroup dapat  digunakan dalam loop dan menambah future baru.
 
+Soal 10 
+Hasil langkah 1 dan 4 sama, hanya berbeda dalam syntax. langkah 1 menggunakan .then dan .catchError. Sedangkan langkah 4 menggunakan try catch
+
+Soal 12
+Jalan di browser bisa, hanya perlu memberikan permission.
