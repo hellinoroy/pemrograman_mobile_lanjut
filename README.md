@@ -21,3 +21,6 @@ Soal 7
 Langkah 1 penambahan method returnFG, dimana future di kelompokan dan di jalankan, setelah ditutup. fungsi yang mengubah result berdasarkan total berjalan.
 Langkah 2 mengubah onPressed sehingga reurnFG berjalan
 
+Soal 8
+Langkah 1 menggunakan FutureGroup sedangkan langkah 4 menggunakan future.wait. Perbedaannya adalah futuregroup lebih flexible dibandingkan future.wait. futuregroup dapat  digunakan dalam loop dan menambah future baru.
+
