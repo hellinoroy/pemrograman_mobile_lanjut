@@ -15,3 +15,6 @@ Soal 7
 Langkah 13 membuat method error manual.
 Langkah 14 menambah "catch" jika terjadi error.
 Langkah 15 trigger method error manual.
+
+Soal 8
+penggunaan transformer, dengan transformer data dapat diolah sebelum masuk kestream.
