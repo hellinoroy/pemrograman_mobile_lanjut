@@ -29,3 +29,6 @@ Hasil langkah 1 dan 4 sama, hanya berbeda dalam syntax. langkah 1 menggunakan .t
 
 Soal 12
 Jalan di browser bisa, hanya perlu memberikan permission.
+
+Soal 13
+Tidak ada perbedaan, karena sama-sama menunggu hasil getPosition() jika belum siap akan ada CircularProgressIndicator()
