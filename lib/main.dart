@@ -48,7 +48,18 @@ class _FuturePageState extends State<FuturePage> {
             const Spacer(),
             ElevatedButton(
               onPressed: () {
-                returnFG();
+                returnError()
+                  .then((value) {
+                    setState(() {
+                        result =  'Success';
+                    });
+                  })
+                    .catchError((onError) {
+                      setState(() {
+                        result = onError.toString();
+                      });
+                    })
+                      .whenComplete(() => print('Complete'));
               }, 
               child: const Text('GO!')
             ),
@@ -109,7 +120,7 @@ class _FuturePageState extends State<FuturePage> {
 
   Future calculate2() async {
     try {
-      await new Future.delayed(const Duration(seconds : 5));
+      await Future.delayed(const Duration(seconds : 5));
       completer.complete(42);
     } catch (_) {
       completer.completeError({});
@@ -117,17 +128,17 @@ class _FuturePageState extends State<FuturePage> {
   }
 
   void returnFG() {
-  //   FutureGroup<int> futureGroup = FutureGroup<int>();
-  //   futureGroup.add(returnOneAsync());
-  //   futureGroup.add(returnTwoAsync());
-  //   futureGroup.add(returnThreeAsync());
-  //   futureGroup.close();
-  final futureGroup = Future.wait<int>([
-    returnOneAsync(),
-    returnTwoAsync(),
-    returnThreeAsync(),
-  ]);
-  futureGroup.then((List <int> value) {
+    // FutureGroup<int> futureGroup = FutureGroup<int>();
+    // futureGroup.add(returnOneAsync());
+    // futureGroup.add(returnTwoAsync());
+    // futureGroup.add(returnThreeAsync());
+    // futureGroup.close();
+    final futureGroup = Future.wait<int>([
+      returnOneAsync(),
+      returnTwoAsync(),
+      returnThreeAsync(),
+    ]);
+    futureGroup.then((List <int> value) {
       int total = 0;
       for (var element in value) {
         total += element;
@@ -137,6 +148,16 @@ class _FuturePageState extends State<FuturePage> {
       });
     });
   }
+
+  Future returnError() async {
+    await Future.delayed(const Duration(seconds: 2));
+    throw Exception('Something terrible happened!');
+    
+  }
+
+
+
+
 }
 
 
