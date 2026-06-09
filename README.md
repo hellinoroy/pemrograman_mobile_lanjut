@@ -5,3 +5,13 @@ yield* menandakan stream berterus, Stream.periodic membuat stream dalam interval
 
 Soal 5
 listen non blocking, sedangkan await for tidak
+
+Soal 6 
+Langkah 8 membuat stream baru dengan StreamController dan mengambil data strea dengan properti .stream. dengan .listen setiap perubahan akan mengubah lastNumber sesuai stream.
+langkah 9 menutup stream jika sudah tidak terpakai
+langkah 10 memasukan data kedalam stream menggunakan method addNumberToSink pada file stream.dart
+
+Soal 7
+Langkah 13 membuat method error manual.
+Langkah 14 menambah "catch" jika terjadi error.
+Langkah 15 trigger method error manual.

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 class ColorStream {
   final List<Color> colors = [
@@ -9,10 +10,6 @@ class ColorStream {
     Colors.teal    
   ];
 
-
-// async* menandakan asynchronous generator, sehingga dapat menggunakan yield dan yield*
-// yield* menandakan stream berterus, Stream.periodic membuat stream dalam interval 1 detik
-
   Stream<Color> getColors() async* {
     yield* Stream.periodic(
       const Duration(seconds: 1), (int t) {
@@ -22,5 +19,19 @@ class ColorStream {
     );
   }
 
+}
+class NumberStream {
+  final StreamController<int> controller = StreamController<int>();
+  void addNumberToSink(int newNumber) {
+    controller.sink.add(newNumber);
+  }
+
+  void close() {
+    controller.close();
+  }
+
+  void addError() {
+    controller.sink.addError('error');
+  }
 
 }
