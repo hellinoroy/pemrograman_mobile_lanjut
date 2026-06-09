@@ -38,3 +38,6 @@ Ada perbedaan jika terjadinya error terhadap future.
 
 Soal 16
 Halaman pertama, merupakan stateful widget. Saat tombol change color ditekan, fungsi akan mengambil result Navigator.pop halaman kedua yang mengubah variabel color, lalu merfresh widget, dengan empty setState.
+
+Soal 17
+Navigation merupakan stateful widget, variable color diganti saat menekan salah satu warna dari ketiga opsi.
