@@ -35,3 +35,6 @@ Tidak ada perbedaan, karena sama-sama menunggu hasil getPosition() jika belum si
 
 Soal 14
 Ada perbedaan jika terjadinya error terhadap future.
+
+Soal 16
+Halaman pertama, merupakan stateful widget. Saat tombol change color ditekan, fungsi akan mengambil result Navigator.pop halaman kedua yang mengubah variabel color, lalu merfresh widget, dengan empty setState.
