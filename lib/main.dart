@@ -33,11 +33,14 @@ class StreamHomePage extends StatefulWidget {
 class _StreamHomePageState extends State<StreamHomePage> {
   Color bgColor = Colors.blueGrey;
   int lastNumber = 0;
+  String values = '';
   late StreamController numberStreamController;
   late StreamSubscription subscription;
+  late StreamSubscription subscription2;
   late StreamTransformer transformer;
   late NumberStream numberStream;
   late ColorStream colorStream;
+
 
   void changeColor() async {
     await for (var eventColor in colorStream.getColors()) {
@@ -62,7 +65,7 @@ class _StreamHomePageState extends State<StreamHomePage> {
 
     numberStream = NumberStream();
     numberStreamController = numberStream.controller;
-    Stream stream = numberStreamController.stream;
+    Stream stream = numberStreamController.stream.asBroadcastStream();
     // stream.transform(transformer).listen((event) {
     //   setState(() {
     //     lastNumber = event;
@@ -74,7 +77,13 @@ class _StreamHomePageState extends State<StreamHomePage> {
     // });
     subscription = stream.listen((event) {
       setState(() {
-        lastNumber = event;
+        values += '$event - ';
+      });
+    });
+
+    subscription2 = stream.listen((event) {
+      setState(() {
+        values += '$event - ';
       });
     });
 
@@ -102,7 +111,7 @@ class _StreamHomePageState extends State<StreamHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(lastNumber.toString()),
+            Text(values),
             ElevatedButton(
               onPressed: () => addRandomNumber(), 
               child: Text('New Random Number')
