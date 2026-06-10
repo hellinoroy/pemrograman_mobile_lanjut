@@ -33,3 +33,6 @@ Listen subscriptionnya 2 biji jadi setiap ada perubahan atau sink yang masuk dia
 Soal 12
 Langkah 3 membuat stream data yang mengirimkan randomint terus menerus kedalam stream dengan jeda 1 detik
 Langkah 7 pake streambuilder, setiap ada perbuahan atau stream masuk, builder akan berjalan.
+
+Soal 13
+Konsep bloc terdapat pada file random_bloc.dart

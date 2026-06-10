@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:uts/random_screen.dart';
 import 'dart:math';
 import 'stream.dart';
 
@@ -18,19 +19,19 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
             primarySwatch: Colors.deepPurple,
         ),
-        home: const StreamHomePage()
+        home: const RandomScreen()
     );
   }
 }
 
-class StreamHomePage extends StatefulWidget {
-    const StreamHomePage({super.key});
+// class StreamHomePage extends StatefulWidget {
+//     const StreamHomePage({super.key});
 
-  @override
-  State<StatefulWidget> createState() => _StreamHomePageState();
-}
+//   @override
+//   State<StatefulWidget> createState() => _StreamHomePageState();
+// }
 
-class _StreamHomePageState extends State<StreamHomePage> {
+// class _StreamHomePageState extends State<StreamHomePage> {
   // Color bgColor = Colors.blueGrey;
   // int lastNumber = 0;
   // String values = '';
@@ -38,7 +39,7 @@ class _StreamHomePageState extends State<StreamHomePage> {
   // late StreamSubscription subscription;
   // late StreamSubscription subscription2;
   // late StreamTransformer transformer;
-  late Stream<int> numberStream;
+  // late Stream<int> numberStream;
   // late ColorStream colorStream;
 
 
@@ -50,9 +51,9 @@ class _StreamHomePageState extends State<StreamHomePage> {
   //   }
   // }
 
-  @override
-  void initState() {
-    super.initState();
+  // @override
+  // void initState() {
+    // super.initState();
     // transformer = StreamTransformer<int, int>.fromHandlers(
     //   handleData: (value, sink) {
     //     sink.add(value * 10);
@@ -62,7 +63,7 @@ class _StreamHomePageState extends State<StreamHomePage> {
     //   },
     //   handleDone: (sink) => sink.close()
     // );
-    numberStream = NumberStream().getNumbers();
+    // numberStream = NumberStream().getNumbers();
 
     // numberStream = NumberStream();
     // numberStreamController = numberStream.controller;
@@ -98,33 +99,33 @@ class _StreamHomePageState extends State<StreamHomePage> {
   //   print('onDone was called');
   // });
 
-  }
+  // }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Stream'),
-      ),
-      body: StreamBuilder(
-        stream: numberStream, 
-        initialData: 0,
-        builder: ((context, snapshot) {
-          if(snapshot.hasError) {
-            print('Error!');
-          }
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       title: const Text('Stream'),
+  //     ),
+  //     body: StreamBuilder(
+  //       stream: numberStream, 
+  //       initialData: 0,
+  //       builder: ((context, snapshot) {
+  //         if(snapshot.hasError) {
+  //           print('Error!');
+  //         }
 
-          if(snapshot.hasData) {
-            return Center(
-              child: Text(snapshot.data.toString(), style: const TextStyle(fontSize: 96))
-            );
-          } else {
-            return const SizedBox.shrink();
-          }
-        })
-      )
-    );
-  }
+  //         if(snapshot.hasData) {
+  //           return Center(
+  //             cild: Text(snapshot.data.toString(), style: const TextStyle(fontSize: 96))
+  //           );
+  //         } else {
+  //           return const SizedBox.shrink();
+  //         }h
+  //       })
+  //     )
+  //   );
+  // }
 
   // @override
   // void dispose() {
@@ -153,4 +154,4 @@ class _StreamHomePageState extends State<StreamHomePage> {
   //   numberStreamController.close();
   // }
 
-}
+// }
