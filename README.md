@@ -18,3 +18,8 @@ Langkah 15 trigger method error manual.
 
 Soal 8
 penggunaan transformer, dengan transformer data dapat diolah sebelum masuk kestream.
+
+Soal 9 
+Langkah 2 mengisi variabel subscription dengan stream listener.
+Langkah 6 mematikan subscription jika tidak dipakai
+Langkah 8 membuat if statement jika tidak closed masih boleh berjalan.
