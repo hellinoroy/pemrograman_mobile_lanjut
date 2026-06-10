@@ -29,3 +29,7 @@ Karena stream sudah di listen pada subscription
 
 Soal 11
 Listen subscriptionnya 2 biji jadi setiap ada perubahan atau sink yang masuk dia concatinate string pake += jadi nambah pake setState. karena dari stream yang sama atau broadcast kedua angka yang keluar sama.
+
+Soal 12
+Langkah 3 membuat stream data yang mengirimkan randomint terus menerus kedalam stream dengan jeda 1 detik
+Langkah 7 pake streambuilder, setiap ada perbuahan atau stream masuk, builder akan berjalan.

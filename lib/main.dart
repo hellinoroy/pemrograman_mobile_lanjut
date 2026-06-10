@@ -31,24 +31,24 @@ class StreamHomePage extends StatefulWidget {
 }
 
 class _StreamHomePageState extends State<StreamHomePage> {
-  Color bgColor = Colors.blueGrey;
-  int lastNumber = 0;
-  String values = '';
-  late StreamController numberStreamController;
-  late StreamSubscription subscription;
-  late StreamSubscription subscription2;
-  late StreamTransformer transformer;
-  late NumberStream numberStream;
-  late ColorStream colorStream;
+  // Color bgColor = Colors.blueGrey;
+  // int lastNumber = 0;
+  // String values = '';
+  // late StreamController numberStreamController;
+  // late StreamSubscription subscription;
+  // late StreamSubscription subscription2;
+  // late StreamTransformer transformer;
+  late Stream<int> numberStream;
+  // late ColorStream colorStream;
 
 
-  void changeColor() async {
-    await for (var eventColor in colorStream.getColors()) {
-      setState(() {
-        bgColor = eventColor;
-      });
-    }
-  }
+  // void changeColor() async {
+  //   await for (var eventColor in colorStream.getColors()) {
+  //     setState(() {
+  //       bgColor = eventColor;
+  //     });
+  //   }
+  // }
 
   @override
   void initState() {
@@ -62,10 +62,11 @@ class _StreamHomePageState extends State<StreamHomePage> {
     //   },
     //   handleDone: (sink) => sink.close()
     // );
+    numberStream = NumberStream().getNumbers();
 
-    numberStream = NumberStream();
-    numberStreamController = numberStream.controller;
-    Stream stream = numberStreamController.stream.asBroadcastStream();
+    // numberStream = NumberStream();
+    // numberStreamController = numberStream.controller;
+    // Stream stream = numberStreamController.stream.asBroadcastStream();
     // stream.transform(transformer).listen((event) {
     //   setState(() {
     //     lastNumber = event;
@@ -75,27 +76,27 @@ class _StreamHomePageState extends State<StreamHomePage> {
     //     lastNumber = -1;
     //   });
     // });
-    subscription = stream.listen((event) {
-      setState(() {
-        values += '$event - ';
-      });
-    });
+  //   subscription = stream.listen((event) {
+  //     setState(() {
+  //       values += '$event - ';
+  //     });
+  //   });
 
-    subscription2 = stream.listen((event) {
-      setState(() {
-        values += '$event - ';
-      });
-    });
+  //   subscription2 = stream.listen((event) {
+  //     setState(() {
+  //       values += '$event - ';
+  //     });
+  //   });
 
-  subscription.onError((error) {
-    setState(() {
-      lastNumber = 1;
-    });
-  });
+  // subscription.onError((error) {
+  //   setState(() {
+  //     lastNumber = 1;
+  //   });
+  // });
 
-  subscription.onDone(() {
-    print('onDone was called');
-  });
+  // subscription.onDone(() {
+  //   print('onDone was called');
+  // });
 
   }
 
@@ -105,52 +106,51 @@ class _StreamHomePageState extends State<StreamHomePage> {
       appBar: AppBar(
         title: const Text('Stream'),
       ),
-      body: SizedBox(
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(values),
-            ElevatedButton(
-              onPressed: () => addRandomNumber(), 
-              child: Text('New Random Number')
-            ),
-            ElevatedButton(
-              onPressed: () => stopStream(), 
-              child: Text('Stop Subscription')
-            ),
-          ],
-        ),
+      body: StreamBuilder(
+        stream: numberStream, 
+        initialData: 0,
+        builder: ((context, snapshot) {
+          if(snapshot.hasError) {
+            print('Error!');
+          }
+
+          if(snapshot.hasData) {
+            return Center(
+              child: Text(snapshot.data.toString(), style: const TextStyle(fontSize: 96))
+            );
+          } else {
+            return const SizedBox.shrink();
+          }
+        })
       )
     );
   }
 
-  @override
-  void dispose() {
-    // numberStreamController.close();
-    subscription.cancel();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   // numberStreamController.close();
+  //   subscription.cancel();
+  //   super.dispose();
+  // }
 
-  void addRandomNumber() {
-    Random random = Random();
-    int myNum = random.nextInt(10);
-    if(!numberStreamController.isClosed) {
-      numberStream.addNumberToSink(myNum);
-    } else {
-      setState(() {
-        lastNumber = -1;
-      });
-    }
+  // void addRandomNumber() {
+  //   Random random = Random();
+  //   int myNum = random.nextInt(10);
+  //   if(!numberStreamController.isClosed) {
+  //     numberStream.addNumberToSink(myNum);
+  //   } else {
+  //     setState(() {
+  //       lastNumber = -1;
+  //     });
+  //   }
 
 
-    // numberStream.addNumberToSink(myNum);
-    // numberStream.addError();
-  }
+  //   // numberStream.addNumberToSink(myNum);
+  //   // numberStream.addError();
+  // }
 
-  void stopStream() {
-    numberStreamController.close();
-  }
+  // void stopStream() {
+  //   numberStreamController.close();
+  // }
 
 }
