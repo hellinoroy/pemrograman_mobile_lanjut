@@ -48,6 +48,7 @@ class _CustomSearchAnchorState extends State<CustomSearchAnchor> {
       },
       child: AbsorbPointer(
         child: SearchAnchor.bar(
+          isFullScreen: true,
           searchController: _controller,
           barHintText: 'Search...',
           barLeading: const Icon(Icons.search),

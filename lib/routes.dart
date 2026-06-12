@@ -5,4 +5,5 @@ class Routes {
   static const String detail = '/detail/:id';
   static const String categories = '/categories/:name';
   static const String saya = '/saya';
+  static const String cart = '/cart';
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tb/widgets/item_card.dart';
 import 'package:tb/widgets/searchbar.dart';
 
@@ -33,7 +34,18 @@ class Beranda extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: CustomSearchAnchor(),
+              child: Row(
+                children: [
+                    Expanded(child: CustomSearchAnchor()),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                      child: IconButton(
+                          icon: const Icon(Icons.shopping_cart),
+                          onPressed: () => context.push('/cart'),
+                      ),
+                    )
+                ],
+              ),
             ),
             Expanded(
               child: GridView.builder(

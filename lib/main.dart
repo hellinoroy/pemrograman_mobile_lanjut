@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tb/pages/beranda.dart';
+import 'package:tb/pages/cart.dart';
 import 'package:tb/pages/catagories.dart';
 import 'package:tb/pages/detail.dart';
 import 'package:tb/pages/saya.dart';
@@ -47,6 +48,14 @@ final _router = GoRouter(
       builder: (context, state) {
         final String id = state.pathParameters['id']!;
         return Detail(id: id);
+      }, 
+    ),
+
+    GoRoute(
+      path: Routes.cart,
+      parentNavigatorKey: _routerKey,
+      builder: (context, state) {
+        return Cart();
       }, 
     ),
 
