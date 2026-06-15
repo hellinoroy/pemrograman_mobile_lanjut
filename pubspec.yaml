@@ -64,6 +64,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   assets:
+    - assets/pizzalist.json
     - assets/foto.jpg
     - assets/project/pos1.jpg
     - assets/project/pos2.jpg
