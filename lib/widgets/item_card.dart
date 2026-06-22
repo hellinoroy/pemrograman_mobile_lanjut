@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:intl/intl.dart';
 class ItemCard extends StatelessWidget {
   final Widget cardImage;
   final String cardText;
@@ -35,7 +35,7 @@ class ItemCard extends StatelessWidget {
               children: [
                 Text(cardText, style: TextStyle(fontWeight: FontWeight.bold,), textScaler: TextScaler.linear(1.2),),
                 SizedBox(height: 5.0,),
-                Text(cardPrice),
+                Text(formatPrice(cardPrice)),
               ],
             ),
           ),
@@ -90,5 +90,16 @@ class ItemCard extends StatelessWidget {
       ),
     );
   }
+
+ String formatPrice(String value) {
+    final number = num.tryParse(value) ?? 0;
+
+    return NumberFormat.currency(
+    locale: 'id_ID',
+    symbol: 'Rp ',
+    decimalDigits: 0,
+  ).format(number);
+}
+
 }
 

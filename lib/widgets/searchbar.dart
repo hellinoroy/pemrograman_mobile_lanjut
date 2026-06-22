@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tb/models/product.dart';
 
 class CustomSearchAnchor extends StatefulWidget {
   const CustomSearchAnchor({super.key});
@@ -8,14 +9,6 @@ class CustomSearchAnchor extends StatefulWidget {
   State<CustomSearchAnchor> createState() => _CustomSearchAnchorState();
 }
 
-class Product {
-  final String id;
-  final String name;
-  final String price;
-  final String imagePath;
-
-  Product({required this.id, required this.name, required this.price, required this.imagePath});
-}
 
 class _CustomSearchAnchorState extends State<CustomSearchAnchor> {
   final SearchController _controller = SearchController();
@@ -83,10 +76,10 @@ class _CustomSearchAnchorState extends State<CustomSearchAnchor> {
             } else {
                 final String query = controller.text.toLowerCase();
                 final List<Product> cards = [
-                  Product(id: '1', name: 'Rib Knit Basic',  price: 'Rp 75.000',  imagePath: 'assets/cloth/RibKnit02.jpeg'),
-                  Product(id: '2', name: 'Lane Knit',  price: 'Rp 85.500',  imagePath: 'assets/cloth/LaneKnit.jpeg'),
-                  Product(id: '3', name: 'Prime Scuba',  price: 'Rp 110.000',  imagePath: 'assets/cloth/PrimeScuba.jpeg'),
-                  Product(id: '4', name: 'Sakura',  price: 'Rp 22.000',  imagePath: 'assets/cloth/Sakura.jpeg'),
+                  Product(id: '1', name: 'Rib Knit Basic',  price: 'Rp 75.000',  img_url: 'assets/cloth/RibKnit02.jpeg'),
+                  Product(id: '2', name: 'Lane Knit',  price: 'Rp 85.500',  img_url: 'assets/cloth/LaneKnit.jpeg'),
+                  Product(id: '3', name: 'Prime Scuba',  price: 'Rp 110.000',  img_url: 'assets/cloth/PrimeScuba.jpeg'),
+                  Product(id: '4', name: 'Sakura',  price: 'Rp 22.000',  img_url: 'assets/cloth/Sakura.jpeg'),
                 ];
                 
                 return cards
