@@ -1,10 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:uts/httphelper.dart';
+import 'package:uts/pages/pizza_detail_screen.dart';
 import './model/pizza.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uts/pages/homepage.dart';
 import 'package:uts/pages/project.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -66,15 +71,43 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text('JSON'),
       ),
-      body: ListView.builder(
-        itemCount: myPizzas.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(myPizzas[index].pizzaName),
-            subtitle: Text(myPizzas[index].description),
-          );
-        }
-      ),
+        body: FutureBuilder(
+          future: callPizzas(),
+          builder: (BuildContext context, AsyncSnapshot<List<Pizza>> snapshot) {
+            if (snapshot.hasError) {
+              return const Text('Something went wrong');
+            }
+            if (!snapshot.hasData) {
+              return const CircularProgressIndicator();
+            }
+              return ListView.builder(
+                itemCount: (snapshot.data == null) ? 0 : snapshot. data!.length,
+                itemBuilder: (BuildContext context, int position) {
+                  return ListTile(
+                    title: Text(snapshot.data![position].pizzaName),
+                    subtitle: Text(snapshot.data![position]. description + ' - € ' + snapshot.data![position].price.toString()),
+                    onTap: () {
+                      Navigator.push(context,
+                        MaterialPageRoute(
+                          builder: (context) => PizzaDetailScreen(
+                          pizza: snapshot.data![position], isNew: false)
+                        )
+                      );
+                    },
+                  );
+                }
+              );
+          }
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => PizzaDetailScreen(pizza: Pizza(id: 1, pizzaName: '', description: '', price: 1, imageUrl: ''), isNew: true,)),
+            );
+          }),
     );
   }
 
@@ -91,16 +124,24 @@ class _MyHomePageState extends State<MyHomePage> {
     return myPizzas;
   }
 
-  @override
-  void initState() {
-    super.initState();
-    readJsonFile().then((value) {
-      setState(() {
-        myPizzas = value;
-      });
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   readJsonFile().then((value) {
+  //     setState(() {
+  //       myPizzas = value;
+  //     });
 
-    });
-  }
+  //   });
+  // }
+
+  Future<List<Pizza>> callPizzas() async {
+    HttpHelper helper = HttpHelper(); 
+    List<Pizza> pizzas = await helper.getPizzaList(); 
+    return pizzas; 
+  } 
 
 
 }
+
+
