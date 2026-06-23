@@ -186,7 +186,7 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                                         _passwordController.text,
                                   );
 
-                                  if (!mounted) return;
+                                  if (!context.mounted) return;
 
                                   if (ok) {
                                     context.go(
@@ -237,7 +237,7 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                             style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 14),
                           ),
                           GestureDetector(
-                            onTap: () => Navigator.pop(context),
+                            onTap: () => context.go('/login'),
                             child: const Text(
                               'Login',
                               style: TextStyle(

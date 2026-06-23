@@ -82,7 +82,7 @@ class Beranda extends StatelessWidget {
                         targetLocation: item.id,
 
                         cardImage: Image.network(
-                          item.img_url,
+                          item.imgUrl,
                           fit: BoxFit.cover,
 
                           errorBuilder:

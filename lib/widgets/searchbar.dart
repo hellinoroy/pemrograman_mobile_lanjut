@@ -76,10 +76,10 @@ class _CustomSearchAnchorState extends State<CustomSearchAnchor> {
             } else {
                 final String query = controller.text.toLowerCase();
                 final List<Product> cards = [
-                  Product(id: '1', name: 'Rib Knit Basic',  price: 'Rp 75.000',  img_url: 'assets/cloth/RibKnit02.jpeg'),
-                  Product(id: '2', name: 'Lane Knit',  price: 'Rp 85.500',  img_url: 'assets/cloth/LaneKnit.jpeg'),
-                  Product(id: '3', name: 'Prime Scuba',  price: 'Rp 110.000',  img_url: 'assets/cloth/PrimeScuba.jpeg'),
-                  Product(id: '4', name: 'Sakura',  price: 'Rp 22.000',  img_url: 'assets/cloth/Sakura.jpeg'),
+                  Product(id: '1', name: 'Rib Knit Basic',  price: 'Rp 75.000',  imgUrl: 'assets/cloth/RibKnit02.jpeg'),
+                  Product(id: '2', name: 'Lane Knit',  price: 'Rp 85.500',  imgUrl: 'assets/cloth/LaneKnit.jpeg'),
+                  Product(id: '3', name: 'Prime Scuba',  price: 'Rp 110.000',  imgUrl: 'assets/cloth/PrimeScuba.jpeg'),
+                  Product(id: '4', name: 'Sakura',  price: 'Rp 22.000',  imgUrl: 'assets/cloth/Sakura.jpeg'),
                 ];
                 
                 return cards

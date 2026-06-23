@@ -13,7 +13,7 @@ class Product {
 
 class Categories extends StatelessWidget {
   final String categoriesName;
-  Categories({super.key, required this.categoriesName});
+  const Categories({super.key, required this.categoriesName});
 
   List dummyData() {
     switch(categoriesName){

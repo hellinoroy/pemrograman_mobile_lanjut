@@ -17,8 +17,7 @@ class AuthService {
     required String email,
     required String password,
   }) async {
-    final res =
-        await http.post(
+    final res = await http.post(
       Uri.parse(
         '$baseUrl/auth/register',
       ),
@@ -35,17 +34,15 @@ class AuthService {
       }),
     );
 
-    return res.statusCode ==
-            200 ||
-        res.statusCode == 201;
+    if (res.statusCode != 201) {
+      return false;
+    }
+
+    return true;
   }
 
-  static Future<bool> login({
-    required String email,
-    required String password,
-  }) async {
-    final res =
-        await http.post(
+  static Future<bool> login({required String email, required String password,}) async {
+    final res = await http.post(
       Uri.parse(
         '$baseUrl/auth/login',
       ),
@@ -61,22 +58,15 @@ class AuthService {
       }),
     );
 
-    if (res.statusCode !=
-        200) {
+    if (res.statusCode != 200) {
       return false;
     }
 
-    final data =
-        jsonDecode(
+    final data = jsonDecode(
       res.body,
     );
 
-    await storage.write(
-      key: 'token',
-      value:
-          data[
-              'access_token'],
-    );
+    await storage.write(key: 'token', value:data['access_token'],);
 
     return true;
   }
@@ -88,8 +78,7 @@ class AuthService {
     );
   }
 
-  static Future<bool>
-      isLoggedIn() async {
+  static Future<bool> isLoggedIn() async {
     final token =
         await storage.read(
       key: 'token',
@@ -99,8 +88,7 @@ class AuthService {
         token.isNotEmpty;
   }
 
-  static Future<void>
-      logout() async {
+  static Future<void> logout() async {
     await storage.delete(
       key: 'token',
     );

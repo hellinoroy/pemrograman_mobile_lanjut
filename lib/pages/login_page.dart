@@ -193,7 +193,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                           _passwordController.text,
                                     );
 
-                                    if (!mounted) return;
+                                    if (!context.mounted) return;
 
                                     if (ok) {
                                       context.go(
@@ -245,10 +245,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                             ),
                             GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const RegisterPage()),
-                                );
+                                context.go('/register');
                               },
                               child: const Text(
                                 'Register',
