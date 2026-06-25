@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tb/models/product.dart';
+import 'package:tb/services/product_service.dart';
 
 class CustomSearchAnchor extends StatefulWidget {
   const CustomSearchAnchor({super.key});
@@ -12,7 +13,6 @@ class CustomSearchAnchor extends StatefulWidget {
 
 class _CustomSearchAnchorState extends State<CustomSearchAnchor> {
   final SearchController _controller = SearchController();
-
  
   @override
   void initState() {
@@ -46,53 +46,99 @@ class _CustomSearchAnchorState extends State<CustomSearchAnchor> {
           barHintText: 'Search...',
           barLeading: const Icon(Icons.search),
 
-          suggestionsBuilder: (BuildContext context, SearchController controller) {
-            if (controller.text.isEmpty) {
-              return [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Categories',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      const SizedBox(height: 12),
-                      Wrap(
-                        spacing: 8.0,
-                        runSpacing: 8.0,
-                        children: [
-                          _buildCategoryChip('Woven Solid', context, controller),
-                          _buildCategoryChip('Woven Knit', context, controller),
-                          _buildCategoryChip('Knit Solid', context, controller),
-                          _buildCategoryChip('Knit Motif', context, controller),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
-              ];
-            } else {
-                final String query = controller.text.toLowerCase();
-                final List<Product> cards = [
-                  Product(id: '1', name: 'Rib Knit Basic',  price: 'Rp 75.000',  imgUrl: 'assets/cloth/RibKnit02.jpeg'),
-                  Product(id: '2', name: 'Lane Knit',  price: 'Rp 85.500',  imgUrl: 'assets/cloth/LaneKnit.jpeg'),
-                  Product(id: '3', name: 'Prime Scuba',  price: 'Rp 110.000',  imgUrl: 'assets/cloth/PrimeScuba.jpeg'),
-                  Product(id: '4', name: 'Sakura',  price: 'Rp 22.000',  imgUrl: 'assets/cloth/Sakura.jpeg'),
-                ];
-                
-                return cards
-                    .where((item) => item.name.toLowerCase().contains(query))
-                    .map((item) => ListTile(
-                        title: Text(item.name),
-                        onTap: () {
-                          context.push('detail/${item.id}');
-                        },
-                        ))
-                    .toList();
-            }
-          },
+        suggestionsBuilder: (
+          BuildContext context,
+          SearchController controller,
+        ) {
+          if (controller.text.isEmpty) {
+            return [];
+          }
+
+          return [
+            FutureBuilder<List<Product>>(
+              future:
+                  ProductService
+                      .searchProducts(
+                controller.text,
+              ),
+
+              builder: (
+                context,
+                snapshot,
+              ) {
+                if (
+                    snapshot.connectionState ==
+                    ConnectionState
+                        .waiting) {
+                  return const Padding(
+                    padding:
+                        EdgeInsets.all(
+                      20,
+                    ),
+
+                    child:
+                        Center(
+                      child:
+                          CircularProgressIndicator(),
+                    ),
+                  );
+                }
+
+                if (
+                    snapshot.hasError) {
+                  return const ListTile(
+                    title:
+                        Text(
+                      'Search failed',
+                    ),
+                  );
+                }
+
+                final products =
+                    snapshot.data ??
+                        [];
+
+                if (
+                    products
+                        .isEmpty) {
+                  return const ListTile(
+                    title:
+                        Text(
+                      'No result',
+                    ),
+                  );
+                }
+
+                return Column(
+                  mainAxisSize:
+                      MainAxisSize.min,
+
+                  children:
+                      products
+                          .map(
+                            (
+                              item,
+                            ) =>
+                                ListTile(
+                              title:
+                                  Text(
+                                item.name,
+                              ),
+
+                              onTap:
+                                  () {
+                                context.push(
+                                  '/detail/${item.id}',
+                                );
+                              },
+                            ),
+                          )
+                          .toList(),
+                );
+              },
+            ),
+          ];
+        },
         ),
       ),
     );

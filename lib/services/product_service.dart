@@ -23,4 +23,40 @@ class ProductService {
         .map((item) => Product.fromJson(item))
         .toList();
   }
+
+  static Future<List<Product>>
+  searchProducts(
+    String query,
+  ) async {
+    final response =
+        await http.get(
+      Uri.parse(
+        '$baseUrl/products/search?q=$query',
+      ),
+    );
+
+    if (response.statusCode !=
+        200) {
+      throw Exception(
+        'Failed to search',
+      );
+    }
+
+    final List<dynamic> data =
+        jsonDecode(
+      response.body,
+    );
+
+    return data
+        .map(
+          (e) =>
+              Product.fromJson(
+            e,
+          ),
+        )
+        .toList();
+  }
+
+
+
 }
