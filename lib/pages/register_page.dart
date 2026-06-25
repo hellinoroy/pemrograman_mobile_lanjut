@@ -174,6 +174,27 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                               ),
                               child: ElevatedButton(
                                 onPressed: () async {
+                                  if (
+                                      _passwordController.text !=
+                                      _confirmPasswordController
+                                          .text) {
+                                    ScaffoldMessenger.of(
+                                      context,
+                                    ).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Password tidak cocok',
+                                        ),
+
+                                        duration: Duration(
+                                          seconds: 2,
+                                        ),
+                                      ),
+                                    );
+
+                                    return;
+                                  }
+
                                   final ok =
                                       await AuthService.register(
                                     nama:
@@ -186,7 +207,9 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                                         _passwordController.text,
                                   );
 
-                                  if (!context.mounted) return;
+                                  if (!context.mounted) {
+                                    return;
+                                  }
 
                                   if (ok) {
                                     context.go(
@@ -197,8 +220,7 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                                       context,
                                     ).showSnackBar(
                                       const SnackBar(
-                                        content:
-                                            Text(
+                                        content: Text(
                                           'Register gagal',
                                         ),
                                       ),

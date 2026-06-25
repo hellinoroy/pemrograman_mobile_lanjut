@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/product.dart';
+import '../models/product_detail.dart';
 
 class ProductDetailService {
   static const _baseUrl = 'http://localhost:8000';
@@ -20,12 +20,12 @@ class ProductDetailService {
   //   }
   // }
 
-  Future<Product> getProductById(int id) async {
+  static Future<ProductDetail> getProductById(int id) async {
     try {
       final response = await http.get(Uri.parse('$_baseUrl/products/$id'));
 
       if (response.statusCode == 200) {
-        return Product.fromJson(json.decode(response.body));
+        return ProductDetail.fromJson(json.decode(response.body));
       } else {
         throw Exception('Product not found');
       }

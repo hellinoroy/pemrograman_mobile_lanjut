@@ -1,41 +1,41 @@
-class Product {
+class ProductDetail {
   final int id;
   final String nama;
   final int harga;
-  final String? tipe;
-  final String? konten;
-  final String? lebar;
-  final String? gramasi;
-  final String? packing;
-  final String? deskripsi;
-  final String? imgUrl;
+  final String tipe;
+  final String konten;
+  final String lebar;
+  final String gramasi;
+  final String packing;
+  final String deskripsi;
+  final String imgUrl;
 
-  Product({
+  ProductDetail({
     required this.id,
     required this.nama,
     required this.harga,
-    this.tipe,
-    this.konten,
-    this.lebar,
-    this.gramasi,
-    this.packing,
-    this.deskripsi,
-    this.imgUrl,
+    required this.tipe,
+    required this.konten,
+    required this.lebar,
+    required this.gramasi,
+    required this.packing,
+    required this.deskripsi,
+    required this.imgUrl,
   });
 
   // Factory constructor to create a Product from JSON
-  factory Product.fromJson(Map<String, dynamic> json) {
-    return Product(
+  factory ProductDetail.fromJson(Map<String, dynamic> json) {
+    return ProductDetail(
       id: json['id'] as int,
       nama: json['nama'] as String,
       harga: json['harga'] as int,
-      tipe: json['tipe'] as String?,
-      konten: json['konten'] as String?,
-      lebar: json['lebar'] as String?,
-      gramasi: json['gramasi'] as String?,
-      packing: json['packing'] as String?,
-      deskripsi: json['deskripsi'] as String?,
-      imgUrl: json['img_url'] as String?, // Maps img_url to camelCase
+      tipe: json['tipe'] as String,
+      konten: json['konten'] as String,
+      lebar: json['lebar'] as String,
+      gramasi: json['gramasi'] as String,
+      packing: json['packing'] as String,
+      deskripsi: json['deskripsi'] as String,
+      imgUrl: json['img_url'] as String, // Maps img_url to camelCase
     );
   }
 

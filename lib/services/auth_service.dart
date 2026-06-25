@@ -41,7 +41,10 @@ class AuthService {
     return true;
   }
 
-  static Future<bool> login({required String email, required String password,}) async {
+static Future<bool> login({
+  required String email,
+  required String password,
+  }) async {
     final res = await http.post(
       Uri.parse(
         '$baseUrl/auth/login',
@@ -62,19 +65,61 @@ class AuthService {
       return false;
     }
 
-    final data = jsonDecode(
+    final data =
+        jsonDecode(
       res.body,
     );
 
-    await storage.write(key: 'token', value:data['access_token'],);
+    await storage.write(
+      key: 'token',
+      value:
+          data[
+              'access_token'],
+    );
+
+    await storage.write(
+      key: 'user_id',
+      value:
+          data['user']['id']
+              .toString(),
+    );
+
+    await storage.write(
+      key: 'user_nama',
+      value:
+          data['user']['nama'],
+    );
+
+    await storage.write(
+      key: 'user_email',
+      value:
+          data['user']['email'],
+    );
 
     return true;
   }
 
-  static Future<String?>
-      getToken() async {
+  static Future<String?> getToken() async {
     return storage.read(
       key: 'token',
+    );
+  }
+
+  static Future<String?> getUserId() async {
+    return storage.read(
+      key: 'user_id',
+    );
+  }
+
+  static Future<String?> getUserNama() async {
+    return storage.read(
+      key: 'user_nama',
+    );
+  }
+
+  static Future<String?> getUserEmail() async {
+    return storage.read(
+      key: 'user_email',
     );
   }
 
@@ -89,8 +134,6 @@ class AuthService {
   }
 
   static Future<void> logout() async {
-    await storage.delete(
-      key: 'token',
-    );
+    await storage.deleteAll();
   }
 }

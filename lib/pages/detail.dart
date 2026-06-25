@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-
-class Product {
-  final String id;
-  final String name;
-  final String price;
-  final String imagePath;
-
-  Product({required this.id, required this.name, required this.price, required this.imagePath});
-}
+import 'package:tb/services/auth_service.dart';
+import 'package:tb/services/product_detail_service.dart';
+import 'package:tb/models/product_detail.dart';
+import 'package:tb/models/comment.dart';
+import 'package:tb/services/comment_service.dart';
 
 class Warna {
   final String nama;
@@ -30,24 +28,155 @@ class Detail extends StatefulWidget {
 
 class _DetailState extends State<Detail> {
 
-  final List<Product> cards = [
-    Product(id: '1', name: 'Rib Knit Basic',  price: 'Rp 75.000',  imagePath: 'assets/cloth/RibKnit02.jpeg'),
-    Product(id: '2', name: 'Lane Knit',  price: 'Rp 85.500',  imagePath: 'assets/cloth/LaneKnit.jpeg'),
-    Product(id: '3', name: 'Prime Scuba',  price: 'Rp 110.000',  imagePath: 'assets/cloth/PrimeScuba.jpeg'),
-    Product(id: '4', name: 'Sakura',  price: 'Rp 22.000',  imagePath: 'assets/cloth/Sakura.jpeg'),
-  ];
+    final commentController = TextEditingController();
+    double selectedRating = 5;
+    Future<void> openCommentDialog({Comment? existing, required int productId,}) async {
+        commentController.text = existing?.comment ?? '';
 
-  final List<Product> colors = [
-    Product(id: '1', name: 'Rib Knit Basic',  price: 'Rp 75.000',  imagePath: 'assets/cloth/RibKnit02.jpeg'),
+        selectedRating = existing?.rating ?? 5;
 
-  ];
+        await showDialog(
+            context: context,
+            builder: (_) {
+            return StatefulBuilder(
+                builder: (
+                context,
+                setDialogState,
+                ) {
+                return AlertDialog(
+                    title: Text(
+                    existing == null
+                        ? 'Tambah Komentar'
+                        : 'Edit Komentar',
+                    ),
+
+                    content: Column(
+                    mainAxisSize:
+                        MainAxisSize.min,
+
+                    children: [
+                        TextField(
+                        controller:
+                            commentController,
+
+                        maxLines: 4,
+
+                        decoration:
+                            const InputDecoration(
+                            labelText:
+                                'Komentar',
+                        ),
+                        ),
+
+                        const SizedBox(
+                        height: 12,
+                        ),
+
+                        DropdownButton<double>(
+                        value:
+                            selectedRating,
+
+                        isExpanded:
+                            true,
+
+                        items:
+                            List.generate(
+                            11,
+                            (i) {
+                            final v =
+                                i * 0.5;
+
+                            return DropdownMenuItem(
+                                value:
+                                    v,
+
+                                child:
+                                    Text(
+                                '$v ⭐',
+                                ),
+                            );
+                            },
+                        ),
+
+                        onChanged:
+                            (v) {
+                            setDialogState(
+                            () {
+                                selectedRating =
+                                    v!;
+                            },
+                            );
+                        },
+                        ),
+                    ],
+                    ),
+
+                    actions: [
+                    TextButton(
+                        onPressed:
+                            () =>
+                                Navigator.pop(
+                        context,
+                        ),
+
+                        child:
+                            const Text(
+                        'Batal',
+                        ),
+                    ),
+
+                    FilledButton(
+                        onPressed:
+                            () async {
+                        if (existing ==
+                            null) {
+                            await CommentService
+                                .createComment(
+                            productId:
+                                productId,
+
+                            comment:
+                                commentController
+                                    .text,
+
+                            rating:
+                                selectedRating,
+                            );
+                        } else {
+                           await CommentService.updateComment(
+                            productId: productId,
+                            id: existing.id,
+                            comment: commentController.text,
+                            rating: selectedRating,
+                          );
+                        }
+
+                        if (!mounted)
+                            return;
+
+                        Navigator.pop(
+                            context,
+                        );
+
+                        setState(() {});
+                        },
+
+                        child:
+                            const Text(
+                        'Simpan',
+                        ),
+                    ),
+                    ],
+                );
+                },
+            );
+            },
+        );
+    }
+
 
   @override
   Widget build(BuildContext context) {
-    final foundProduct = cards.firstWhere(
-      (product) => product.id == widget.id,
-      orElse: () => Product(id: 'error', name: 'Tidak Ditemukan', price: '', imagePath: ''),
-    );
     final colors = Theme.of(context).colorScheme;
 
     final backgroundColor = WidgetStateProperty.resolveWith<Color?>((states) {
@@ -70,7 +199,8 @@ class _DetailState extends State<Detail> {
       return Colors.white; // Default color
     });
 
-    Table detailProduk() {
+
+    Table detailProduk({required String tipe, required String konten, required int harga, required String lebar, required String gramasi, required String packing}) {
       return Table(
         columnWidths: {
           0: FixedColumnWidth(120),
@@ -89,269 +219,462 @@ class _DetailState extends State<Detail> {
           TableRow(
             children: [
               Text('Fabric Type', style: TextStyle(color: Colors.grey.shade400),),
-              Text(':  Placeholder')
+              Text(':  $tipe')
             ]
           ),
           TableRow(
             children: [
               Text('Fabric Content', style: TextStyle(color: Colors.grey.shade400)),
-              Text(':  Placeholder')
+              Text(':  $konten')
             ]
           ),
           TableRow(
             children: [
               Text('Harga / Yard', style: TextStyle(color: Colors.grey.shade400)),
-              Text(':  Placeholder')
+              Text(':  ${formatPrice(harga.toString())}')
             ]
           ),
           TableRow(
             children: [
               Text('Lebar Kain', style: TextStyle(color: Colors.grey.shade400)),
-              Text(':  Placeholder')
+              Text(':  $lebar')
             ]
           ),
           TableRow(
             children: [
               Text('Gramasi', style: TextStyle(color: Colors.grey.shade400)),
-              Text(':  Placeholder')
+              Text(':  $gramasi')
             ]
           ),
           TableRow(
             children: [
               Text('Packing / Roll', style: TextStyle(color: Colors.grey.shade400)),
-              Text(':  Placeholder')
+              Text(':  $packing')
             ]
           ),
         ],
       );
     }
 
-    FilledButton pilihWarnaModal() {
-      return FilledButton(
-        onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            enableDrag: false,
-            builder: (BuildContext context) {
-              // Local list of item variants and their quantities
-              List<String> variants = ['Merah', 'Biru', 'Hijau'];
-              List<int> quantities = [0, 0, 0];
-              return StatefulBuilder(
-                builder: (BuildContext context, StateSetter setModalState) {
-                  return Padding(
-                    // Padding handles screen bottom safely, especially with keyboards
-                    padding: EdgeInsets.only(
-                      top: 16.0,
-                      left: 16.0,
-                      right: 16.0,
-                      bottom: MediaQuery.of(context).viewInsets.bottom + 16.0,
+
+
+    bool isEdited(
+      Comment comment,
+    ) {
+      return comment.editedAt !=
+          null;
+    }
+
+    Widget commentsSection(
+      List<Comment> comments,
+      int productId,
+      ) {
+      return FutureBuilder<String?>(
+        future:
+            AuthService
+                .getUserId(),
+
+        builder: (
+          context,
+          auth,
+        ) {
+          final currentUser =
+              auth.data;
+
+          return Column(
+            children: [
+
+              Padding(
+                padding:
+                    const EdgeInsets.all(
+                  10,
+                ),
+
+                child: Row(
+                  children: [
+
+                    const Expanded(
+                      child: Text(
+                        'Komentar',
+
+                        style: TextStyle(
+                          fontWeight:
+                              FontWeight.bold,
+                        ),
+                      ),
                     ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min, // Hugs content tightly
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // --- TOP ROW: Title & Close Button ---
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Varian Warna',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.close),
-                              onPressed: () => Navigator.pop(context), // Removes the modal
-                            ),
-                          ],
-                        ),
-                        const Divider(),
-                        const SizedBox(height: 8),
 
-                        // --- MIDDLE SECTION: List of counters ---
-                        // Using a Flexible/Constrained element so it works inside a dynamic Column
-                        Column(
-                          children: List.generate(variants.length, (index) {
-                            return ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              title: Text(variants[index]),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.remove_circle_outline),
-                                    onPressed: () {
-                                      setModalState(() {
-                                        if (quantities[index] > 0) quantities[index]--;
-                                      });
-                                    },
-                                  ),
-                                  Text(
-                                    '${quantities[index]}',
-                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.add_circle_outline),
-                                    onPressed: () {
-                                      setModalState(() {
-                                        quantities[index]++;
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                            );
-                          }),
-                        ),
-                        const SizedBox(height: 24),
-                        // --- BOTTOM SECTION: Filled Action Button ---
-                        SizedBox(
-                          width: double.infinity, 
-                          height: 48,
-                          child: FilledButton(
-                            onPressed: () async {
-                    
-                              List<Map<String, dynamic>> varian = [];
-                              for (int i = 0; i < variants.length; i++) {
-                                  if (quantities[i] > 0) {
-                                  varian.add({
-                                      "warna": variants[i],
-                                      "qty": quantities[i],
-                                  });
-                                  }
-                              }
-                              final data = {
-                                  "barang": "test", 
-                                  "varian": varian,
-                              };
+                    FutureBuilder<bool>(
+                      future:
+                          AuthService
+                              .isLoggedIn(),
 
-                              final prefs = await SharedPreferences.getInstance();
-                              await prefs.setString(
-                                  'keranjang',
-                                  jsonEncode(data),
-                              );
-                              Navigator.pop(context); 
-                            },
-                            style: FilledButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: const Text(
-                              '+ Keranjang',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      builder: (
+                        context,
+                        state,
+                      ) {
+                        final loggedIn =
+                            state.data ??
+                                false;
+
+                        return FilledButton(
+                          onPressed:
+                              loggedIn
+                                  ? () =>
+                                        openCommentDialog(
+                                          productId:
+                                              productId,
+                                        )
+                                  : null,
+
+                          child: Text(
+                            loggedIn
+                                ? '+ Tambah'
+                                : 'Login',
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
+              ...comments.map(
+                (c) {
+                  final ownComment =
+                      currentUser ==
+                          c.userId
+                              .toString();
+
+                  return Card(
+                    margin:
+                        const EdgeInsets.symmetric(
+                      horizontal:
+                          10,
+
+                      vertical:
+                          4,
+                    ),
+
+                    child: ListTile(
+                      title: Row(
+                        children: [
+
+                          Expanded(
+                            child:
+                                Text(
+                              c.userName,
                             ),
                           ),
-                        ),
-                      ],
+
+                          Text(
+                            '⭐ ${c.rating}',
+                          ),
+                        ],
+                      ),
+
+                      subtitle:
+                          Column(
+                        crossAxisAlignment:
+                            CrossAxisAlignment
+                                .start,
+
+                        children: [
+
+                          const SizedBox(
+                            height:
+                                4,
+                          ),
+
+                          Text(
+                            c.comment,
+                          ),
+
+                          if (
+                              isEdited(
+                                c,
+                              ))
+                            const Text(
+                              '(edited)',
+
+                              style:
+                                  TextStyle(
+                                fontSize:
+                                    12,
+
+                                color:
+                                    Colors
+                                        .grey,
+                              ),
+                            ),
+                        ],
+                      ),
+
+                      trailing:
+                          ownComment
+                              ? PopupMenuButton(
+                                  itemBuilder:
+                                      (_) => [
+
+                                    const PopupMenuItem(
+                                      value:
+                                          'edit',
+
+                                      child:
+                                          Text(
+                                        'Edit',
+                                      ),
+                                    ),
+
+                                    const PopupMenuItem(
+                                      value:
+                                          'delete',
+
+                                      child:
+                                          Text(
+                                        'Delete',
+                                      ),
+                                    ),
+                                  ],
+
+                                  onSelected:
+                                      (
+                                    value,
+                                  ) async {
+                                    if (value ==
+                                        'edit') {
+                                      openCommentDialog(
+                                        existing:
+                                            c,
+
+                                        productId:
+                                            productId,
+                                      );
+                                    }
+
+                                    if (value ==
+                                        'delete') {
+                                      await CommentService
+                                          .deleteComment(
+                                        productId:
+                                            productId,
+
+                                        id:
+                                            c.id,
+                                      );
+
+                                      setState(
+                                        () {},
+                                      );
+                                    }
+                                  },
+                                )
+
+                              : null,
                     ),
                   );
                 },
-              );
-            },
+              ),
+            ],
           );
-        }, 
-        style: ButtonStyle(
-        shape: WidgetStatePropertyAll(
-          const RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero,
-          )
-        ),
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        padding: WidgetStateProperty.all(
-          const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        ),
-        backgroundColor: backgroundColor, 
-        textStyle: WidgetStateProperty.all(TextStyle(color: Colors.white))),
-        child: const Text('Pilih Warna')
+        },
       );
     }
 
+    return FutureBuilder<ProductDetail>(
+      future: ProductDetailService.getProductById(int.parse(widget.id)),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+        return Scaffold(
+            body: Center(child: Text('Error: ${snapshot.error}')),
+        );
+        }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(foundProduct.name),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              children: [
-                Image.asset(foundProduct.imagePath, height: 300.0, width: 300.0,),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Text('Harga: ${foundProduct.price} / Kilogram', style: TextStyle(color: colors.primary, fontSize: 22, fontWeight: FontWeight.bold  ),),
+        if (!snapshot.hasData) {
+            return const Scaffold(
+                body: Center(
+                child: CircularProgressIndicator(),
                 ),
-                Divider(color: Colors.grey, thickness: 2, indent: 10, endIndent: 10),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: detailProduk(),
-                ),
-                Divider(color: Colors.grey, thickness: 2, indent: 10, endIndent: 10),
-                Padding(
-                  padding: const EdgeInsetsGeometry.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Deskripsi', style: TextStyle(fontWeight: FontWeight.bold),),
-                      const SizedBox(height: 4,),
-                      Text('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam condimentum risus a purus vulputate, ut vestibulum purus laoreet. Nam tincidunt vestibulum auctor. Cras sit amet scelerisque lacus, sit amet lacinia massa. Integer sapien libero, sagittis ac ultrices a, efficitur in purus. Duis rhoncus porttitor imperdiet. Donec aliquet mi nec magna dictum egestas. Proin ornare eros enim, nec tempus orci fermentum vel.',textAlign: TextAlign.justify,)
-                    ],
-                  ),
-                ),
-              ],
-            ),
+            );
+        }
+
+        final product = snapshot.data!;
+        String appBarTitle = product.nama;
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(appBarTitle),
           ),
-          IntrinsicHeight(
-            child: Row( 
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                    border: Border(
-                      top: BorderSide(
-                        color: colors.primary, 
-                        width: 1,         
-                      ),
+          body: Column(
+            children: [
+              Expanded(
+                child: ListView(
+                  children: [
+                    Image.network(product.imgUrl, height: 300.0, width: 300.0,),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Text('Harga: ${formatPrice(product.harga.toString())} / Kilogram', style: TextStyle(color: colors.primary, fontSize: 22, fontWeight: FontWeight.bold  ),),
+                    ),
+                    Divider(color: Colors.grey, thickness: 2, indent: 10, endIndent: 10),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: detailProduk(
+                        tipe: product.tipe, 
+                        konten: product.konten, 
+                        harga: product.harga, 
+                        lebar: product.lebar, 
+                        gramasi: product.gramasi, 
+                        packing: product.packing,
                       ),
                     ),
-                    child: FilledButton(
-                      onPressed: () => {}, 
-                      style: ButtonStyle(
-                        shape: WidgetStatePropertyAll(
-                          const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero,
-                          )
-                        ),
-                      
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        padding: WidgetStateProperty.all(
-                          const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                        ),
-                        backgroundColor: backgroundColor2, 
-                        textStyle: WidgetStateProperty.all(TextStyle(color: Colors.white))),
-                        child: Column(
-                          children: [
-                            Icon(Icons.chat_bubble_outline_outlined, color: colors.primary,),
+                    Divider(color: Colors.grey, thickness: 2, indent: 10, endIndent: 10),
+                    Padding(
+                      padding: const EdgeInsetsGeometry.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                            Text('Deskripsi', style: TextStyle(fontWeight: FontWeight.bold),),
                             const SizedBox(height: 4,),
-                            Text('Request Handfeel', style: TextStyle(color: colors.primary),)
-                          ],
-                        )
+                            Text(product.deskripsi),
+                            const SizedBox(height: 20),
+                            FutureBuilder<List<Comment>>(
+                                future: CommentService.getComments(product.id,),
+                                builder: (context, snapshot) {
+                                    if (!snapshot.hasData) {
+                                    return const Center(
+                                        child:
+                                            CircularProgressIndicator(),
+                                    );
+                                    }
+
+                                    if (snapshot.hasError) {
+                                    return const Text(
+                                        'Gagal memuat komentar',
+                                    );
+                                    }
+
+                                    return commentsSection(
+                                        snapshot.data!,
+                                        product.id,
+                                    );
+                                },
+                            ),
+                        ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-                Expanded(
-                  child: pilihWarnaModal()
+              ),
+              IntrinsicHeight(
+                child: Row( 
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(
+                            color: colors.primary, 
+                            width: 1,         
+                          ),
+                          ),
+                        ),
+                        child: FilledButton(
+                          onPressed: () => {}, 
+                          style: ButtonStyle(
+                            shape: WidgetStatePropertyAll(
+                              const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero,
+                              )
+                            ),
+                          
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            padding: WidgetStateProperty.all(
+                              const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                            ),
+                            backgroundColor: backgroundColor2, 
+                            textStyle: WidgetStateProperty.all(TextStyle(color: Colors.white))),
+                            child: Column(
+                              children: [
+                                Icon(Icons.chat_bubble_outline_outlined, color: colors.primary,),
+                                const SizedBox(height: 4,),
+                                Text('Request Handfeel', style: TextStyle(color: colors.primary),)
+                              ],
+                            )
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                        child: FilledButton(
+                            onPressed: () async {
+                                final loggedIn = await AuthService.isLoggedIn();
+                                if (!loggedIn) {
+                                    if (!context.mounted) return;
+                                    return context.go('/login');
+                                }
+
+
+                                final prefs = await SharedPreferences.getInstance();
+                                String? existingCartString = prefs.getString('keranjang');
+                                List<dynamic> cartList = [];
+
+                                if (existingCartString != null) {
+                                    cartList = jsonDecode(existingCartString);
+                                }
+
+                                int existingIndex = cartList.indexWhere((item) => item['id'] == product.id);
+
+                                if (existingIndex != -1) {
+                                    cartList[existingIndex]['jumlah'] += 1;
+                                } else {
+                                    final data = {
+                                    "id": product.id,
+                                    "nama": product.nama,
+                                    "jumlah": 1,
+                                    "harga": product.harga,
+                                    };
+                                    cartList.add(data);
+                                }
+                                await prefs.setString('keranjang', jsonEncode(cartList));
+                            },     
+                            style: ButtonStyle(
+                                shape: WidgetStatePropertyAll(
+                                    const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.zero,
+                                    )
+                                ),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                padding: WidgetStateProperty.all(
+                                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                                ),
+                                backgroundColor: backgroundColor, 
+                                textStyle: WidgetStateProperty.all(TextStyle(color: Colors.white))
+                            ),
+                            child: const Text('Tambah ke Keranjang')
+                       )
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          )
-        ],
-      ),
+              )
+            ],
+          ),
+        );
+
+      }
     );
+
+    
   }
+
+
+String formatPrice(String value) {
+final number = num.tryParse(value) ?? 0;
+
+    return NumberFormat.currency(
+    locale: 'id_ID',
+    symbol: 'Rp ',
+    decimalDigits: 0,
+  ).format(number);
+}
 
 }
